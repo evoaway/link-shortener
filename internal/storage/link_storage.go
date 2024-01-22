@@ -22,14 +22,7 @@ func (s *Storage) Collection() *mongo.Collection {
 }
 
 func (s *Storage) Create(ctx context.Context, link models.Link) (*models.Link, error) {
-	count, err := s.Collection().CountDocuments(ctx, bson.M{"_id": link.Short})
-	if err != nil {
-		return nil, fmt.Errorf("%w", err)
-	}
-	if count > 0 {
-		return nil, fmt.Errorf("%s", "ID already exists")
-	}
-	_, err = s.Collection().InsertOne(ctx, link)
+	_, err := s.Collection().InsertOne(ctx, link)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}

@@ -34,12 +34,14 @@ func (h *Handler) CreateShortLink(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	err := render.DecodeJSON(r.Body, &req)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "Could not decode the request", http.StatusBadRequest)
+		return
 	}
 	var short = HashEncode(req.Link)
 	newLink := models.Link{Short: short, Original: req.Link}
 	_, err = h.storage.Create(r.Context(), newLink)
 	if err != nil {
+		// temporary solution
 		log.Fatal(err)
 	}
 	render.JSON(w, r, newLink)
