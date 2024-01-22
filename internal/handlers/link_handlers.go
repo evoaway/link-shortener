@@ -46,8 +46,8 @@ func (h *Handler) CreateShortLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CetLink(w http.ResponseWriter, r *http.Request) {
-	link := chi.URLParam(r, "link")
-	originalLink, err := h.storage.GetOne(r.Context(), link)
+	shortLink := chi.URLParam(r, "link")
+	originalLink, err := h.storage.GetOne(r.Context(), shortLink)
 	if err != nil {
 		http.Error(w, "Link not found", http.StatusNotFound)
 		return

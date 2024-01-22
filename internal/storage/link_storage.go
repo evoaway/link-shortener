@@ -21,27 +21,27 @@ func (s *Storage) Collection() *mongo.Collection {
 	return s.db.Collection("links")
 }
 
-func (s *Storage) Create(ctx context.Context, url models.Link) (*models.Link, error) {
-	count, err := s.Collection().CountDocuments(ctx, bson.M{"_id": url.Short})
+func (s *Storage) Create(ctx context.Context, link models.Link) (*models.Link, error) {
+	count, err := s.Collection().CountDocuments(ctx, bson.M{"_id": link.Short})
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
 	if count > 0 {
 		return nil, fmt.Errorf("%s", "ID already exists")
 	}
-	_, err = s.Collection().InsertOne(ctx, url)
+	_, err = s.Collection().InsertOne(ctx, link)
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}
-	return &url, nil
+	return &link, nil
 }
-func (s *Storage) GetOne(ctx context.Context, url string) (*models.Link, error) {
-	var originalURl models.Link
-	if err := s.Collection().FindOne(ctx, bson.D{{"_id", url}}).Decode(&originalURl); err != nil {
+func (s *Storage) GetOne(ctx context.Context, shortLink string) (*models.Link, error) {
+	var originalLink models.Link
+	if err := s.Collection().FindOne(ctx, bson.D{{"_id", shortLink}}).Decode(&originalLink); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, fmt.Errorf("%s", "Record does not exist")
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	return &originalURl, nil
+	return &originalLink, nil
 }
