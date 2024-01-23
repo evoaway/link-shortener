@@ -26,7 +26,7 @@ func Run(ctx context.Context) error {
 	r := chi.NewRouter()
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/", linkHandler.CreateShortLink)
-		r.Get("/{link}", linkHandler.CetLink)
+		r.Get("/{link}", linkHandler.GetLink)
 	})
 	return http.ListenAndServe(":3000", r)
 }
