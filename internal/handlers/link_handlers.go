@@ -43,6 +43,7 @@ func (h *Handler) CreateShortLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
+	// TODO url validator
 	var short = HashEncode(req.Link)
 	newLink := models.Link{Short: short, Original: req.Link}
 	err = h.storage.Create(r.Context(), newLink)
@@ -61,6 +62,7 @@ func (h *Handler) GetLink(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error when getting link due to %v", err)
 		if errors.Is(err, ErrNotFound) {
 			http.Error(w, http.StatusText(404), http.StatusNotFound)
+			return
 		}
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return

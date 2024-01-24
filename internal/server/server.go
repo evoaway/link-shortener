@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/evoaway/link-shortener/internal/config"
 	"github.com/evoaway/link-shortener/internal/handlers"
 	"github.com/evoaway/link-shortener/internal/storage"
 	"github.com/go-chi/chi/v5"
@@ -12,7 +13,8 @@ import (
 )
 
 func Run(ctx context.Context) error {
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://127.0.0.1:27017"))
+	cfg := config.LoadConfig()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg.MongoURI))
 	if err != nil {
 		return err
 	}
@@ -21,12 +23,12 @@ func Run(ctx context.Context) error {
 			log.Print(err)
 		}
 	}()
-	linkStorage := storage.NewStorage(client.Database("links_db"))
+	linkStorage := storage.NewStorage(client.Database(cfg.DBName))
 	linkHandler := handlers.New(linkStorage)
 	r := chi.NewRouter()
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/", linkHandler.CreateShortLink)
 		r.Get("/{link}", linkHandler.GetLink)
 	})
-	return http.ListenAndServe(":3000", r)
+	return http.ListenAndServe(":"+cfg.Port, r)
 }
