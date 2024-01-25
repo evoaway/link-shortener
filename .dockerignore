@@ -1,5 +1,6 @@
 .git
 .idea
+nginx
 .dockerignore
 .gitignore
 Dockerfile
