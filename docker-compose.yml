@@ -1,0 +1,21 @@
+version: "3"
+services:
+  api:
+    container_name: link-shortener
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+    depends_on:
+      - api
