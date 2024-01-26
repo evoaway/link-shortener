@@ -13,8 +13,8 @@ import (
 )
 
 func Run(ctx context.Context) error {
-	cfg := config.LoadConfig()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(cfg.MongoURI))
+	conf := config.LoadConfig()
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(conf.MongoURI))
 	if err != nil {
 		return err
 	}
@@ -23,12 +23,12 @@ func Run(ctx context.Context) error {
 			log.Print(err)
 		}
 	}()
-	linkStorage := storage.NewStorage(client.Database(cfg.DBName))
+	linkStorage := storage.NewStorage(client.Database(conf.DBName))
 	linkHandler := handlers.New(linkStorage)
 	r := chi.NewRouter()
 	r.Route("/api", func(r chi.Router) {
 		r.Post("/", linkHandler.CreateShortLink)
 		r.Get("/{link}", linkHandler.GetLink)
 	})
-	return http.ListenAndServe(":"+cfg.Port, r)
+	return http.ListenAndServe(":"+conf.Port, r)
 }

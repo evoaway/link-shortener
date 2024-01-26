@@ -73,5 +73,5 @@ func HashEncode(url string) string {
 	h := sha256.New()
 	h.Write([]byte(url))
 	hashValue := h.Sum(nil)
-	return hex.EncodeToString(hashValue)
+	return hex.EncodeToString(hashValue)[:8]
 }
