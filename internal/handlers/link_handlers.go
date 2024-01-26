@@ -8,6 +8,7 @@ import (
 	"github.com/evoaway/link-shortener/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"github.com/go-playground/validator/v10"
 	"log"
 	"net/http"
 )
@@ -43,7 +44,12 @@ func (h *Handler) CreateShortLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
-	// TODO url validator
+	validate := validator.New()
+	if err = validate.Struct(req); err != nil {
+		log.Printf("Invalid request: %v", err)
+		http.Error(w, http.StatusText(400), http.StatusBadRequest)
+		return
+	}
 	var short = HashEncode(req.Link)
 	newLink := models.Link{Short: short, Original: req.Link}
 	err = h.storage.Create(r.Context(), newLink)
