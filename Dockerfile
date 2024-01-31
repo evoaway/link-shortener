@@ -9,6 +9,5 @@ FROM alpine
 RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk*
 WORKDIR /app
 COPY --from=build-stage /link-shortener .
-COPY --from=build-stage /app/.env .
 EXPOSE 3000
 ENTRYPOINT ["./link-shortener"]
