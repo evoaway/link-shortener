@@ -2,10 +2,10 @@
 ## About
 Rest API service for shortening links on Go using [Chi](https://github.com/go-chi/chi) router, `MongoDB` to store data and `ngninx` proxy server. There are two endpoints:
 
-| Method | Endpoint      | Body             | Response                                           |
-|--------|---------------|------------------|----------------------------------------------------|
-| POST   | `/api`        | `{ link: 'url'` } | ` { short: 'short_url' original: 'original_url' }` |
-| GET    | `/api/{link}` | | ` { short: 'short_url' original: 'original_url' }` |
+| Method | Endpoint      | Request body      | Response                                           |
+|--------|---------------|-------------------|----------------------------------------------------|
+| POST   | `/api`        | `{ link: 'url'} ` | ` { short: 'short_url' original: 'original_url' }` |
+| GET    | `/api/{link}` |                   | ` { short: 'short_url' original: 'original_url' }` |
 
 
 ## Usage
